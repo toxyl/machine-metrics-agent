@@ -1,5 +1,5 @@
 # Machine Metrics Agent (MMA)
-This is a small application that collects metrics from hosts and writes them to an Influx DB.
+This is a small application that collects metrics from a host and writes them to an Influx DB.
 
 ## Metrics Collected
 | Group | Metric | Unit | Desc |
