@@ -14,8 +14,8 @@ type Config struct {
 	Interval int    `yaml:"interval"`
 }
 
-func loadConfig() (*Config, error) {
-	content, err := os.ReadFile("config.yaml")
+func loadConfig(path string) (*Config, error) {
+	content, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}

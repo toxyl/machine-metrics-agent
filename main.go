@@ -35,29 +35,31 @@ var (
 )
 
 func main() {
-	hostname, err := os.Hostname()
-	if err != nil {
-		fmt.Println("Error retrieving hostname:", err)
+	if len(os.Args) < 2 {
+		fmt.Printf("Usage:   %s [config]\n", os.Args[0])
+		fmt.Printf("Example: %s config.yaml\n", os.Args[0])
 		return
 	}
 
-	if utils.IsRunningInLXC() {
-		hostname += " (LXC)"
-	}
-
-	config, err := loadConfig()
+	config, err := loadConfig(os.Args[1])
 	if err != nil {
-		fmt.Println("Error loading configuration:", err)
-		return
+		panic("Error loading configuration: " + err.Error())
 	}
 
 	client := influx.NewClient(config.URL, config.Org, config.Bucket, config.Token)
-
 	updateInterval := time.Duration(config.Interval) * time.Second
+	hostname := "N/A"
 	for {
+		if h, err := os.Hostname(); err == nil {
+			hostname = h
+			if utils.IsRunningInLXC() {
+				hostname += " (LXC)"
+			}
+		}
+
 		t := time.Now()
-		wg := &sync.WaitGroup{}
 		res := collectors.NewCollectorResults()
+		wg := &sync.WaitGroup{}
 		for k, v := range collectorFns {
 			wg.Add(1)
 			go func() {
