@@ -3,3 +3,4 @@ org: myOrg
 bucket: myBucket
 token: myToken
 interval: 5 # in seconds
+verify_tls: true

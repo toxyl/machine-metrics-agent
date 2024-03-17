@@ -2,6 +2,7 @@ package influx
 
 import (
 	"context"
+	"crypto/tls"
 	"strings"
 	"time"
 
@@ -20,8 +21,10 @@ type Client struct {
 	queryAPI api.QueryAPI
 }
 
-func NewClient(url, org, bucket, token string) *Client {
-	client := influxdb2.NewClient(url, token)
+func NewClient(url, org, bucket, token string, verifyTLS bool) *Client {
+	client := influxdb2.NewClientWithOptions(url, token, influxdb2.DefaultOptions().SetTLSConfig(&tls.Config{
+		InsecureSkipVerify: !verifyTLS,
+	}))
 	c := &Client{
 		url:      url,
 		org:      org,

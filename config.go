@@ -7,11 +7,12 @@ import (
 )
 
 type Config struct {
-	URL      string `yaml:"url"`
-	Org      string `yaml:"org"`
-	Bucket   string `yaml:"bucket"`
-	Token    string `yaml:"token"`
-	Interval int    `yaml:"interval"`
+	URL       string `yaml:"url"`
+	Org       string `yaml:"org"`
+	Bucket    string `yaml:"bucket"`
+	Token     string `yaml:"token"`
+	Interval  int    `yaml:"interval"`
+	VerifyTLS bool   `yaml:"verify_tls"`
 }
 
 func loadConfig(path string) (*Config, error) {

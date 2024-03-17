@@ -46,7 +46,7 @@ func main() {
 		panic("Error loading configuration: " + err.Error())
 	}
 
-	client := influx.NewClient(config.URL, config.Org, config.Bucket, config.Token)
+	client := influx.NewClient(config.URL, config.Org, config.Bucket, config.Token, config.VerifyTLS)
 	updateInterval := time.Duration(config.Interval) * time.Second
 	hostname := "N/A"
 	for {
