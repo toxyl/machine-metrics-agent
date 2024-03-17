@@ -22,7 +22,13 @@ func (ns *Info) update() {
 		fields := strings.Fields(line)
 		if len(fields) >= 17 {
 			interfaceName := strings.TrimSuffix(strings.TrimPrefix(fields[0], ":"), ":")
-			if interfaceName != "lo" { // Skip loopback interface
+			if interfaceName != "lo" &&
+				!strings.HasPrefix(interfaceName, "vmbr") &&
+				!strings.HasPrefix(interfaceName, "veth") &&
+				!strings.HasPrefix(interfaceName, "tap") &&
+				!strings.HasPrefix(interfaceName, "fwln") &&
+				!strings.HasPrefix(interfaceName, "fwbr") &&
+				!strings.HasPrefix(interfaceName, "fwpr") {
 				bytesIn, _ := strconv.ParseUint(fields[1], 10, 64)
 				bytesOut, _ := strconv.ParseUint(fields[9], 10, 64)
 				bIn += bytesIn
