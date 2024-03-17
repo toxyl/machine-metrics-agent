@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"runtime"
+	"os/exec"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -20,6 +22,20 @@ type CPUTime struct {
 	Softirq uint64
 	Steal   uint64
 	Guest   uint64
+}
+
+func getAvailableCores() uint {
+	cmd := exec.Command("nproc")
+	output, err := cmd.Output()
+	if err != nil {
+		return 0
+	}
+	coresStr := strings.TrimSpace(string(output))
+	cores, err := strconv.ParseUint(coresStr, 10, 32)
+	if err != nil {
+		return 0
+	}
+	return uint(cores)
 }
 
 func (ct CPUTime) Total() uint64 {
@@ -54,5 +70,5 @@ func (c *Info) update() {
 	afterTime := c.getCPUTime()
 	totalDiff := float64((afterTime.Total() - initialTime.Total()) * 100)
 	c.UsedPct = math.Max(0.0, (totalDiff-float64((afterTime.Idle-initialTime.Idle)*100))/totalDiff)
-	c.Cores = uint(runtime.NumCPU())
+	c.Cores = getAvailableCores()
 }
